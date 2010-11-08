@@ -1,0 +1,139 @@
+# SSHGate Web Service
+
+## Get SSHGate WS
+
+Bundler is used to manage dependencies, you need to install it first.
+
+    sudo gem install bundler
+    
+    git clone git://github.com/Tauop/sshGate_ws.git
+    cd sshGate_ws
+    bundle install
+
+## Configure SSHGate WS
+
+To configure the database connection, open the sshGate_ws/app.rb file and edit the database informations :
+
+    ActiveRecord::Base.establish_connection({
+      :adapter  => 'sqlite3',
+      :database => 'sshgate.sqlite'
+    })
+
+## Run SSHGate WS
+
+There are several ways to run the service.
+
+### Using rackup
+
+    cd sshGate_ws
+    rackup
+
+The WS is accessible using _http://localhost:9292_ :
+
+    curl http://localhost:9292/users
+
+### Using passenger
+
+SSHGate WS is a classical _Rack_ application. It can then be deployed like any _Rails_ application using _Passenger_.
+
+    <VirtualHost *:80>
+      ServerName sshgate
+      DocumentRoot /path/to/sshGate_ws/public
+    </VirtualHost>
+
+The WS is accessible using _http://sshgate_ :
+
+    curl http://sshgate/users
+
+## Call the API
+
+Here are the urls you can call with their methods :
+
+### List all users
+
+    GET /users
+    # == OUTPUT ==
+    # - user1:
+    #   attributes:
+    #     is_restricted: true
+    # - user2:
+    #   attributes:
+    #     is_restricted: false
+    #
+    # == EXEMPLE ==
+    # curl http://sshgate/users
+
+### Get an user
+
+    GET /users/user1
+    # == OUTPUT ==
+    # user1:
+    #   attributes:
+    #     is_restricted: true
+    #
+    # == EXEMPLE ==
+    # curl http://sshgate/users/user1
+
+### Get infos about how to create a new user
+
+    GET /users/new
+    # == OUTPUT ==
+    # schema:
+    #   name: String
+    #   is_restricted: Boolean
+    #
+    # == EXEMPLE ==
+    # curl http://sshgate/users/new
+
+### Create an user
+
+    POST /users
+    # == INFOS ==
+    # POST data: user[name]=user42&name[is_restricted]=1
+    #
+    # == OUTPUT ==
+    # User created
+    #
+    # == EXEMPLE ==
+    # curl http://sshgate/users --data "user[name]=user42&name[is_restricted]=1"
+
+### Get infos about how to update an user
+
+    GET /users/edit/user1
+    # == OUTPUT ==
+    # schema:
+    #   name: String
+    #   is_restricted: Boolean
+    # data:
+    #   name: user1
+    #   is_restricted: true
+    #
+    # == EXEMPLE ==
+    # curl http://sshgate/users/edit/user1
+
+### Update an user
+
+    PUT /users/user42
+    # == INFOS ==
+    # PUT data: user[is_restricted]=0
+    # To use POST
+    # POST data: user[is_restricted]=0&_method=put
+    #
+    # == OUTPUT ==
+    # User updated
+    #
+    # == EXEMPLE ==
+    # curl http://sshgate/users/user42 --data "name[is_restricted]=0&_method=put"
+
+### Remove an user
+
+    DELETE /users/user42
+    # == INFOS ==
+    # To use POST
+    # POST data: _method=delete
+    #
+    # == OUTPUT ==
+    # User destroyed
+    #
+    # == EXEMPLE ==
+    # curl http://sshgate/users/user42 --data "_method=delete"
