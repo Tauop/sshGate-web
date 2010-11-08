@@ -1,0 +1,5 @@
+<% @users.each do |user| -%>
+- <%= user.name %>:
+  attributes:
+    is_restricted: <%= user.restricted? ? 'true' : 'false' %>
+<%- end -%>
