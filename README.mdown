@@ -6,13 +6,13 @@ Bundler is used to manage dependencies, you need to install it first.
 
     sudo gem install bundler
     
-    git clone git://github.com/Tauop/sshGate_ws.git
-    cd sshGate_ws
+    git clone git://github.com/Tauop/sshGate-webservice.git
+    cd sshGate-webservice
     bundle install
 
 ## Configure SSHGate WS
 
-To configure the database connection, open the sshGate_ws/app.rb file and edit the database informations :
+To configure the database connection, open the sshGate-webservice/app.rb file and edit the database informations :
 
     ActiveRecord::Base.establish_connection({
       :adapter  => 'sqlite3',
@@ -25,7 +25,7 @@ There are several ways to run the service.
 
 ### Using rackup
 
-    cd sshGate_ws
+    cd sshGate-webservice
     rackup
 
 The WS is accessible using _http://localhost:9292_ :
@@ -38,7 +38,7 @@ SSHGate WS is a classical _Rack_ application. It can then be deployed like any _
 
     <VirtualHost *:80>
       ServerName sshgate
-      DocumentRoot /path/to/sshGate_ws/public
+      DocumentRoot /path/to/sshGate-webservice/public
     </VirtualHost>
 
 The WS is accessible using _http://sshgate_ :
