@@ -12,6 +12,8 @@ Bundler is used to manage dependencies, you need to install it first.
 
 ## Configure SSHGate WS
 
+SSHGate WS comes with a test database _sshgate.sqlite_. You can use a different driver or database.
+
 To configure the database connection, open the sshGate-webservice/app.rb file and edit the database informations :
 
     ActiveRecord::Base.establish_connection({
