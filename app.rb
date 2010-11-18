@@ -133,3 +133,8 @@ delete '/users/:name' do
   @user.destroy
   redirect '/users', 'User removed'
 end
+
+# Responding to a non existing URL
+not_found do
+  throw :halt, [404, 'Command not found']
+end
