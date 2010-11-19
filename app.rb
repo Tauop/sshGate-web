@@ -104,7 +104,7 @@ end
 post '/users' do
   @user = User.new(params[:user])
   if @user.save
-    redirect "/users/#{@user.id}", 'User created'
+    redirect "/users/#{@user.name}", 'User created'
   else
     redirect "/users/new", 'Error while saving user'
   end
@@ -118,7 +118,7 @@ put '/users/:name' do
 
   @user.update_attributes(params[:user])
   if @user.save
-    redirect "/users/#{@user.id}", 'User updated'
+    redirect "/users/#{@user.name}", 'User updated'
   else
     redirect "/users/edit/#{params[:name]}", 'Error while updating user'
   end
