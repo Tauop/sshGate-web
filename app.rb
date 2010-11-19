@@ -77,7 +77,6 @@ end
 
 # New
 get '/users/new' do
-  "HELLO"
   @user = User.new
   erb :'users/new'
 end
