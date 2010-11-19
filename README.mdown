@@ -80,7 +80,7 @@ Here are the urls you can call with their methods :
 
     GET /users/new
     # == OUTPUT ==
-    # schema:
+    # user:
     #   name: String
     #   is_restricted: Boolean
     #
@@ -103,8 +103,7 @@ Here are the urls you can call with their methods :
 
     GET /users/edit/user1
     # == OUTPUT ==
-    # schema:
-    #   name: String
+    # user:
     #   is_restricted: Boolean
     # data:
     #   name: user1
