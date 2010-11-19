@@ -96,7 +96,7 @@ get '/users/edit/:name' do
 
   throw :halt, [404, 'User not found'] unless @user
 
-  erb :'users/user'
+  erb :'users/edit'
 end
 
 # Create

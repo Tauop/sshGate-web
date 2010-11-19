@@ -1,0 +1,5 @@
+user:
+  is_restricted: Boolean
+data:
+  name: <%= @user.name %>
+  is_restricted: <%= @user.restricted? ? 'true' : 'false' %>
