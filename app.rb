@@ -1,5 +1,9 @@
 require 'erb'
 
+require 'rubygems'
+require 'bundler'
+Bundler.require
+
 #
 # Configuration section
 # http://sinatra-book.gittr.com/#configuration
