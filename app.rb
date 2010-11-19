@@ -151,5 +151,7 @@ end
 
 # Responding to a non existing URL
 not_found do
-  throw :halt, [404, 'Command not found']
+  unless response.body.is_a?(String)
+    throw :halt, [404, 'Command not found']
+  end
 end
