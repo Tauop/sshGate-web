@@ -1,0 +1,11 @@
+---
+database:
+  production:
+    adapter: sqlite3
+    database: sshgate.sqlite
+  development:
+    adapter: sqlite3
+    database: dev_sshgate.sqlite
+  test:
+    adapter: sqlite3
+    database: test_sshgate.sqlite

@@ -9,6 +9,9 @@ Bundler.require
 # http://sinatra-book.gittr.com/#configuration
 #
 configure do
+  # ensuring the root path is set
+  set :root, File.dirname(__FILE__)
+
   # defining the yaml mime type
   # TODO: after devel set to 'text/yaml'
   mime_type :yaml, 'text/plain'
@@ -25,20 +28,10 @@ configure do
   # ensure the views location (bundler or passenger bugs happen)
   set :views, './views'
 
+  config_file 'sshgate.yml'
+
   # Loading the database
-  # TODO: put this in a config file
-  ActiveRecord::Base.establish_connection({
-    ## mysql
-    # :adapter  => 'mysql',
-    # :database => '',
-    # :username => '',
-    # :password => '',
-    # :host     => 'localhost',
-    # :encoding => 'utf8'
-    ## sqlite
-    :adapter => 'sqlite3',
-    :database => 'sshgate.sqlite'
-  })
+  ActiveRecord::Base.establish_connection(settings.database['production'])
 end
 
 
