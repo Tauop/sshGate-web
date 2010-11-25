@@ -2,6 +2,9 @@ module Sinatra
   module RestAPI
     def resources(model_name, options={})
       class_name = model_name.to_s.capitalize
+      options = {
+        :key => :id
+      }.merge(options)
 
       class_eval <<-EndMeth
         # Index
@@ -17,8 +20,8 @@ module Sinatra
         end
 
         # Show
-        get '/#{model_name}s/:name' do
-          @#{model_name} = #{class_name}.find_by_name(params[:name])
+        get '/#{model_name}s/:#{options[:key]}' do
+          @#{model_name} = #{class_name}.find_by_#{options[:key]}(params[:#{options[:key]}])
 
           throw :halt, [404, '#{class_name} not found'] unless @#{model_name}
 
@@ -26,8 +29,8 @@ module Sinatra
         end
 
         # Edit
-        get '/#{model_name}s/edit/:name' do
-          @#{model_name} = #{class_name}.find_by_name(params[:name])
+        get '/#{model_name}s/edit/:#{options[:key]}' do
+          @#{model_name} = #{class_name}.find_by_#{options[:key]}(params[:#{options[:key]}])
 
           throw :halt, [404, '#{class_name} not found'] unless @#{model_name}
 
@@ -38,29 +41,29 @@ module Sinatra
         post '/#{model_name}s' do
           @#{model_name} = #{class_name}.new(params[:#{model_name}])
           if @#{model_name}.save
-            redirect "/#{model_name}s/\#{@#{model_name}.name}", '#{class_name} created'
+            redirect "/#{model_name}s/\#{@#{model_name}.#{options[:key]}}", '#{class_name} created'
           else
             redirect "/#{model_name}s/new", 'Error while saving #{class_name}'
           end
         end
 
         # Update
-        put '/#{model_name}s/:name' do
-          @#{model_name} = #{class_name}.find_by_name(params[:name])
+        put '/#{model_name}s/:#{options[:key]}' do
+          @#{model_name} = #{class_name}.find_by_#{options[:key]}(params[:#{options[:key]}])
 
           throw :halt, [404, '#{class_name} not found'] unless @#{model_name}
 
           @#{model_name}.update_attributes(params[:#{model_name}])
           if @#{model_name}.save
-            redirect "/#{model_name}s/\#{@#{model_name}.name}", '#{class_name} updated'
+            redirect "/#{model_name}s/\#{@#{model_name}.#{options[:key]}}", '#{class_name} updated'
           else
-            redirect "/#{model_name}s/edit/\#{params[:name]}", 'Error while updating #{class_name}'
+            redirect "/#{model_name}s/edit/\#{params[:#{options[:key]}]}", 'Error while updating #{class_name}'
           end
         end
 
         # Delete
-        delete '/#{model_name}s/:name' do
-          @#{model_name} = #{class_name}.find_by_name(params[:name])
+        delete '/#{model_name}s/:#{options[:key]}' do
+          @#{model_name} = #{class_name}.find_by_#{options[:key]}(params[:#{options[:key]}])
 
           throw :halt, [404, '#{class_name} not found'] unless @#{model_name}
 

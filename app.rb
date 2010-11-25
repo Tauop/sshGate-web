@@ -72,7 +72,7 @@ before do
   content_type :yaml
 end
 
-resources :user
+resources :user, :key => :name
 
 # Responding to a non existing URL
 not_found do
