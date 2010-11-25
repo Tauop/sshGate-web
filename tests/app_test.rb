@@ -51,7 +51,7 @@ class AppTest < Test::Unit::TestCase
   def test_creating_a_user_with_existing_name_should_not_work
     ensure_users_are_present
     post '/users', :user => { :name => 'user1' }
-    assert_equal 'Error while saving User', last_response.body
+    assert_equal 'Error while saving user', last_response.body
     follow_redirect!
 
     assert_equal 'http://example.org/users/new', last_request.url
