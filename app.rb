@@ -31,7 +31,7 @@ configure do
   config_file 'sshgate.yml'
 
   # Loading the database
-  ActiveRecord::Base.establish_connection(settings.database['production'])
+  ActiveRecord::Base.establish_connection(settings.database[settings.environment.to_sym])
 end
 
 
