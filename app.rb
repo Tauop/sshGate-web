@@ -4,6 +4,10 @@ require 'rubygems'
 require 'bundler'
 Bundler.require
 
+$:.unshift File.join(File.dirname(__FILE__), 'lib')
+
+require 'sinatra/rest_api'
+
 #
 # Configuration section
 # http://sinatra-book.gittr.com/#configuration
@@ -68,79 +72,7 @@ before do
   content_type :yaml
 end
 
-#
-# Actions
-# http://sinatra-book.gittr.com/#routes
-#
-
-# no default route, redirecting to users
-get '/' do
-  redirect '/users'
-end
-
-# Index
-get '/users' do
-  @users = User.all
-  erb :'users/index'
-end
-
-# New
-get '/users/new' do
-  @user = User.new
-  erb :'users/new'
-end
-
-# Show
-get '/users/:name' do
-  @user = User.find_by_name(params[:name])
-
-  throw :halt, [404, 'User not found'] unless @user
-
-  erb :'users/user'
-end
-
-# Edit
-get '/users/edit/:name' do
-  @user = User.find_by_name(params[:name])
-
-  throw :halt, [404, 'User not found'] unless @user
-
-  erb :'users/edit'
-end
-
-# Create
-post '/users' do
-  @user = User.new(params[:user])
-  if @user.save
-    redirect "/users/#{@user.name}", 'User created'
-  else
-    redirect "/users/new", 'Error while saving user'
-  end
-end
-
-# Update
-put '/users/:name' do
-  @user = User.find_by_name(params[:name])
-
-  throw :halt, [404, 'User not found'] unless @user
-
-  @user.update_attributes(params[:user])
-  if @user.save
-    redirect "/users/#{@user.name}", 'User updated'
-  else
-    redirect "/users/edit/#{params[:name]}", 'Error while updating user'
-  end
-end
-
-# Delete
-delete '/users/:name' do
-  @user = User.find_by_name(params[:name])
-
-  throw :halt, [404, 'User not found'] unless @user
-
-  @user.destroy
-  redirect '/users', 'User removed'
-end
+resources :user
 
 # Responding to a non existing URL
 not_found do
