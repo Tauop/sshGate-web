@@ -9,44 +9,37 @@ $:.unshift File.join(File.dirname(__FILE__), 'lib')
 
 require 'sinatra/rest_api'
 
-#
+###
+### Sinatra Application configuration
+###
+
 # Configuration section
-# http://sinatra-book.gittr.com/#configuration
-#
 configure do
-  # ensuring the root path is set
-  set :root, File.dirname(__FILE__)
+  set :root, File.dirname(__FILE__) # ensuring the root path is set
+  set :views, './views'             # ensuring the views location
 
-  # defining the yaml mime type
-  # TODO: after devel set to 'text/yaml'
-  mime_type :yaml, 'text/plain'
+  set :erb, :trim => '-'            # allowing usage of <%- ... -%> tags
+  set :method_override, true        # allowing usage of _method for
+                                    # PUT and DELETE methods
+  set :show_exceptions, false       # do not display exceptions to users
 
-  # allowing usage of <%- ... -%> tags
-  set :erb, :trim => '-'
+  mime_type :yaml, 'text/plain'     # defining the yaml mime type
 
-  # allowing usage of _method for PUT and DELETE methods
-  set :method_override, true
+  config_file 'sshgate.yml'         # loads sshgate.yml into settings
 
-  # do not display exceptions to users
-  set :show_exceptions, false
-
-  # ensure the views location (bundler or passenger bugs happen)
-  set :views, './views'
-
-  config_file 'sshgate.yml'
-
-  # Loading the database
-  ActiveRecord::Base.establish_connection(settings.database[settings.environment.to_sym])
+  # Connecting to the database
+  database_infos = settings.database[settings.environment.to_sym]
+  ActiveRecord::Base.establish_connection(database_infos)
 end
 
-#
 # Called before each action
-# http://sinatra-book.gittr.com/#filters
-#
 before do
-  # setting the content-type to yaml
-  content_type :yaml
+  content_type :yaml                # setting the content-type to yaml
 end
+
+###
+### Routes
+###
 
 # Responding to a non existing URL
 not_found do

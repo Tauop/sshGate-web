@@ -10,9 +10,9 @@ module Sinatra
         :only     => [:index, :new, :show, :edit, :create, :update, :delete]
       }.merge(options)
 
+      # Index
       if options[:only].include?(:index)
         class_eval <<-IndexMeth
-          # Index
           get '/#{resource_name}s' do
             @#{resource_name}s = #{options[:model]}.all
             erb :"#{resource_name}s/index"
@@ -20,9 +20,9 @@ module Sinatra
         IndexMeth
       end
 
+      # New
       if options[:only].include?(:new)
         class_eval <<-NewMeth
-          # New
           get '/#{resource_name}s/new' do
             @#{resource_name} = #{options[:model]}.new
             erb :'#{resource_name}s/new'
@@ -30,9 +30,9 @@ module Sinatra
         NewMeth
       end
 
+      # Show
       if options[:only].include?(:show)
         class_eval <<-ShowMeth
-          # Show
           get '/#{resource_name}s/:#{options[:key]}' do
             @#{resource_name} = #{options[:model]}.find_by_#{options[:key]}(params[:#{options[:key]}])
 
@@ -43,9 +43,9 @@ module Sinatra
         ShowMeth
       end
 
+      # Edit
       if options[:only].include?(:edit)
         class_eval <<-EditMeth
-          # Edit
           get '/#{resource_name}s/edit/:#{options[:key]}' do
             @#{resource_name} = #{options[:model]}.find_by_#{options[:key]}(params[:#{options[:key]}])
 
@@ -56,9 +56,9 @@ module Sinatra
         EditMeth
       end
 
+      # Create
       if options[:only].include?(:create)
         class_eval <<-CreateMeth
-          # Create
           post '/#{resource_name}s' do
             @#{resource_name} = #{options[:model]}.new(params[:#{resource_name}])
             if @#{resource_name}.save
@@ -70,9 +70,9 @@ module Sinatra
         CreateMeth
       end
 
+      # Update
       if options[:only].include?(:update)
         class_eval <<-UpdateMeth
-          # Update
           put '/#{resource_name}s/:#{options[:key]}' do
             @#{resource_name} = #{options[:model]}.find_by_#{options[:key]}(params[:#{options[:key]}])
 
@@ -88,9 +88,9 @@ module Sinatra
         UpdateMeth
       end
 
+      # Delete
       if options[:only].include?(:delete)
         class_eval <<-DeleteMeth
-          # Delete
           delete '/#{resource_name}s/:#{options[:key]}' do
             @#{resource_name} = #{options[:model]}.find_by_#{options[:key]}(params[:#{options[:key]}])
 
@@ -104,5 +104,6 @@ module Sinatra
     end
   end
 
+  # The module registers itself in the Sinatra Application
   register RestAPI
 end
