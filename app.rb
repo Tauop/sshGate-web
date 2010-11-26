@@ -4,6 +4,7 @@ require 'rubygems'
 require 'bundler'
 Bundler.require
 
+# Adding the lib directory to require path
 $:.unshift File.join(File.dirname(__FILE__), 'lib')
 
 require 'sinatra/rest_api'
@@ -38,31 +39,6 @@ configure do
   ActiveRecord::Base.establish_connection(settings.database[settings.environment.to_sym])
 end
 
-
-
-#
-# User model
-#
-class User < ActiveRecord::Base
-  validates_uniqueness_of :name
-
-  before_update :remove_name
-
-  def restricted?
-    !self.is_restricted.zero?
-  end
-
-  private
-
-  def remove_name
-    if self.name_changed?
-      self.name = self.name_was
-    end
-  end
-end
-
-
-
 #
 # Called before each action
 # http://sinatra-book.gittr.com/#filters
@@ -72,11 +48,13 @@ before do
   content_type :yaml
 end
 
-resources :user, :key => :name
-
 # Responding to a non existing URL
 not_found do
   unless response.body.is_a?(String)
     throw :halt, [404, 'Command not found']
   end
 end
+
+require 'model/user'
+
+resources :user, :key => :name
