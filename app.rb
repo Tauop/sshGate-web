@@ -28,7 +28,7 @@ configure do
   config_file 'sshgate.yml'         # loads sshgate.yml into settings
 
   # Connecting to the database
-  database_infos = settings.database[settings.environment.to_sym]
+  database_infos = settings.database[settings.environment.to_s]
   ActiveRecord::Base.establish_connection(database_infos)
 end
 
