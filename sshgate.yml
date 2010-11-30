@@ -1,4 +1,6 @@
 ---
+users_keys_dir: keys/users
+
 database:
   production:
     adapter: sqlite3

@@ -1,5 +1,11 @@
 user:
+  mail: String
+  is_admin: Boolean
   is_restricted: Boolean
+  public_key: Text
 data:
   name: <%= @user.name %>
+  mail: <%= @user.mail %>
+  public_key: <%= @user.public_key %>
+  is_admin: <%= @user.admin? ? 'true' : 'false' %>
   is_restricted: <%= @user.restricted? ? 'true' : 'false' %>
