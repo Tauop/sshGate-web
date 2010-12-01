@@ -38,7 +38,7 @@ module Sinatra
 
             throw :halt, [404, '#{options[:singular].capitalize} not found'] unless @#{resource_name}
 
-            erb :'#{resource_name}s/#{resource_name}'
+            erb :'#{resource_name}s/show'
           end
         ShowMeth
       end
