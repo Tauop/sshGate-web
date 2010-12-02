@@ -64,7 +64,8 @@ module Sinatra
             if @#{resource_name}.save
               redirect "/#{resource_name}s/\#{@#{resource_name}.#{options[:key]}}", '#{options[:model]} created'
             else
-              redirect "/#{resource_name}s/new", 'Error while saving #{options[:singular]}'
+              message = show_errors(@#{resource_name}, 'Error while saving #{options[:singular]}')
+              redirect "/#{resource_name}s/new", message
             end
           end
         CreateMeth

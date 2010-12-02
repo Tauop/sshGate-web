@@ -32,6 +32,17 @@ configure do
   ActiveRecord::Base.establish_connection(database_infos)
 end
 
+helpers do
+  def show_errors(record, message=nil)
+    out = record.errors.values.join("\n")
+    out = "#{message}\n#{out}\n" unless message.nil?
+  end
+
+  def path_append(conf_key, path)
+    File.join(options[conf_key.to_s], path)
+  end
+end
+
 # Called before each action
 before do
   content_type :yaml                # setting the content-type to yaml

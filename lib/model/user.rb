@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  validates_uniqueness_of :name
+  validates_uniqueness_of :name, :message => 'name has already been taken'
 
   attr_accessor :public_key
   before_update :remove_name
@@ -28,7 +28,7 @@ class User < ActiveRecord::Base
   end
 
   def load_public_key
-    unless self.public_key_file.blank?
+    if self.public_key_file?
       if File.exists?(self.public_key_file)
         self.public_key = File.read(self.public_key_file)
       end

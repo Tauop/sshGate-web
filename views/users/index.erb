@@ -1,8 +1,8 @@
 <% @users.each do |user| -%>
-- <%= user.name %>:
+<%= user.name %>:
   attributes:
     mail: <%= user.mail %>
-    public_key: <%= user.public_key %>
+    public_key: "<%= user.public_key %>"
     is_admin: <%= user.admin? ? 'true' : 'false' %>
     is_restricted: <%= user.restricted? ? 'true' : 'false' %>
 <%- end -%>

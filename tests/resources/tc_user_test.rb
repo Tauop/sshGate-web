@@ -1,16 +1,5 @@
-require 'yaml'
-require 'app'
-require 'test/unit'
-require 'rack/test'
-
-ENV['RACK_ENV'] = 'test'
-
-class AppTest < Test::Unit::TestCase
-  include Rack::Test::Methods
-
-  def app
-    Sinatra::Application
-  end
+class TC_UserTest < Test::Unit::TestCase
+  include AppTestCase
 
   def test_empty_response_at_beginning
     ensure_no_user_is_present
@@ -25,14 +14,21 @@ class AppTest < Test::Unit::TestCase
 
     get '/users'
     assert last_response.ok?
-    
+
     expected = [
-      "- user1:",
+      "user1:",
       "  attributes:",
+      "    mail: user1@example.com",
+      '    public_key: "abcdef"',
+      "    is_admin: false",
       "    is_restricted: true",
-      "- user2:",
+      "user2:",
       "  attributes:",
-      "    is_restricted: false\n"
+      "    mail: user2@example.com",
+      '    public_key: "zyxwvu"',
+      "    is_admin: true",
+      "    is_restricted: false",
+      ""
     ].join("\n")
     
     assert_equal expected, last_response.body
@@ -51,7 +47,14 @@ class AppTest < Test::Unit::TestCase
   def test_creating_a_user_with_existing_name_should_not_work
     ensure_users_are_present
     post '/users', :user => { :name => 'user1' }
-    assert_equal 'Error while saving user', last_response.body
+
+    expected = [
+      "Error while saving user",
+      "name has already been taken",
+      ""
+    ].join("\n")
+
+    assert_equal expected, last_response.body
     follow_redirect!
 
     assert_equal 'http://example.org/users/new', last_request.url
@@ -67,7 +70,11 @@ class AppTest < Test::Unit::TestCase
     expected = [
       "user1:",
       "  attributes:",
-      "    is_restricted: true\n"
+      "    mail: user1@example.com",
+      '    public_key: "abcdef"',
+      "    is_admin: false",
+      "    is_restricted: true",
+      ""
     ].join("\n")
 
     assert_equal expected, last_response.body
@@ -86,13 +93,17 @@ class AppTest < Test::Unit::TestCase
     expected = [
       "user:",
       "  name: String",
-      "  is_restricted: Boolean\n"
+      "  mail: String",
+      "  public_key: Text",
+      "  is_admin: Boolean",
+      "  is_restricted: Boolean",
+      ""
     ].join("\n")
 
     assert_equal expected, last_response.body
   end
 
-  def test_getting_an_edit_form
+  def test_getting_an_user_edit_form
     ensure_users_are_present
 
     get '/users/edit/user1'
@@ -100,10 +111,17 @@ class AppTest < Test::Unit::TestCase
 
     expected = [
       "user:",
+      "  mail: String",
+      "  public_key: Text",
+      "  is_admin: Boolean",
       "  is_restricted: Boolean",
       "data:",
       "  name: user1",
-      "  is_restricted: true\n"
+      "  mail: user1@example.com",
+      "  public_key: abcdef",
+      "  is_admin: false",
+      "  is_restricted: true",
+      ""
     ].join("\n")
 
     assert_equal expected, last_response.body
@@ -133,23 +151,38 @@ class AppTest < Test::Unit::TestCase
   end
 
   def test_deleting_a_user
+    ensure_users_are_present
+
     delete '/users/user1'
     assert last_response.redirection?
     assert_equal 'User removed', last_response.body
   end
 
-  def test_calling_an_undefined_url
-    get '/not-existing-url'
-    assert last_response.not_found?
-    assert_equal 'Command not found', last_response.body
+  def test_deleting_a_user_with_post
+    ensure_users_are_present
+
+    post '/users/user1', :_method => 'delete'
+    assert last_response.redirection?
+    assert_equal 'User removed', last_response.body
   end
 
   private
 
   def ensure_users_are_present
     ensure_no_user_is_present
-    User.find_or_create_by_name('user1')
-    User.find_or_create_by_name_and_is_restricted('user2', false)
+
+    User.create({
+      :name       => 'user1',
+      :mail       => 'user1@example.com',
+      :public_key => 'abcdef'
+    })
+    User.create({
+      :name          => 'user2',
+      :mail          => 'user2@example.com',
+      :public_key    => 'zyxwvu',
+      :is_admin      => true,
+      :is_restricted => false
+    })
   end
 
   def ensure_no_user_is_present
