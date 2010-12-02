@@ -1,0 +1,6 @@
+<% @memberships.each do |membership| -%>
+<%= membership.id %>:
+  attributes:
+    user: <%= membership.user.name %>
+    usergroup: <%= membership.usergroup.name %>
+<%- end -%>

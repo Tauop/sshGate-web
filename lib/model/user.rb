@@ -1,4 +1,7 @@
 class User < ActiveRecord::Base
+  has_many :memberships, :dependent => :destroy
+  has_many :usergroups, :through => :memberships
+
   validates_uniqueness_of :name, :message => 'name has already been taken'
 
   attr_accessor :public_key

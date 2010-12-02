@@ -4,3 +4,7 @@
     public_key: "<%= @user.public_key %>"
     is_admin: <%= @user.admin? ? 'true' : 'false' %>
     is_restricted: <%= @user.restricted? ? 'true' : 'false' %>
+  usergroups:
+    <%- @user.usergroups.each do |usergroup| -%>
+    - <%= usergroup.name %>
+    <%- end -%>

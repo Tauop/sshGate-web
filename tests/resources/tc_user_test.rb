@@ -22,12 +22,14 @@ class TC_UserTest < Test::Unit::TestCase
       '    public_key: "abcdef"',
       "    is_admin: false",
       "    is_restricted: true",
+      "  usergroups:",
       "user2:",
       "  attributes:",
       "    mail: user2@example.com",
       '    public_key: "zyxwvu"',
       "    is_admin: true",
       "    is_restricted: false",
+      "  usergroups:",
       ""
     ].join("\n")
     
@@ -74,6 +76,7 @@ class TC_UserTest < Test::Unit::TestCase
       '    public_key: "abcdef"',
       "    is_admin: false",
       "    is_restricted: true",
+      "  usergroups:",
       ""
     ].join("\n")
 
