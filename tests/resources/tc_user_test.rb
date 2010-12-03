@@ -15,25 +15,28 @@ class TC_UserTest < Test::Unit::TestCase
     get '/users'
     assert last_response.ok?
 
-    expected = [
-      "user1:",
-      "  attributes:",
-      "    mail: user1@example.com",
-      '    public_key: "abcdef"',
-      "    is_admin: false",
-      "    is_restricted: true",
-      "  usergroups:",
-      "user2:",
-      "  attributes:",
-      "    mail: user2@example.com",
-      '    public_key: "zyxwvu"',
-      "    is_admin: true",
-      "    is_restricted: false",
-      "  usergroups:",
-      ""
-    ].join("\n")
-    
-    assert_equal expected, last_response.body
+    expected = {
+      'user1' => {
+        'attributes' => {
+          'mail'          => 'user1@example.com',
+          'public_key'    => 'abcdef',
+          'is_admin'      => false,
+          'is_restricted' => true
+        },
+        'usergroups' => nil
+      },
+      'user2' => {
+        'attributes' => {
+          'mail'          => 'user2@example.com',
+          'public_key'    => 'zyxwvu',
+          'is_admin'      => true,
+          'is_restricted' => false
+        },
+        'usergroups' => nil
+      }
+    }
+
+    assert_equal expected, y(last_response.body)
   end
 
   def test_creating_a_user
@@ -69,18 +72,18 @@ class TC_UserTest < Test::Unit::TestCase
     get '/users/user1'
     assert last_response.ok?
 
-    expected = [
-      "user1:",
-      "  attributes:",
-      "    mail: user1@example.com",
-      '    public_key: "abcdef"',
-      "    is_admin: false",
-      "    is_restricted: true",
-      "  usergroups:",
-      ""
-    ].join("\n")
-
-    assert_equal expected, last_response.body
+    expected = {
+      'user1' => {
+        'attributes' => {
+          'mail'          => 'user1@example.com',
+          'public_key'    => 'abcdef',
+          'is_admin'      => false,
+          'is_restricted' => true
+        },
+        'usergroups' => nil
+      }
+    }
+    assert_equal expected, y(last_response.body)
   end
 
   def test_getting_an_unexisting_user_should_not_work
@@ -93,17 +96,17 @@ class TC_UserTest < Test::Unit::TestCase
     get '/users/new'
     assert last_response.ok?
 
-    expected = [
-      "user:",
-      "  name: String",
-      "  mail: String",
-      "  public_key: Text",
-      "  is_admin: Boolean",
-      "  is_restricted: Boolean",
-      ""
-    ].join("\n")
+    expected = {
+      'user' => {
+        'name'          => 'String',
+        'mail'          => 'String',
+        'public_key'    => 'Text',
+        'is_admin'      => 'Boolean',
+        'is_restricted' => 'Boolean'
+      }
+    }
 
-    assert_equal expected, last_response.body
+    assert_equal expected, y(last_response.body)
   end
 
   def test_getting_an_user_edit_form
@@ -112,22 +115,23 @@ class TC_UserTest < Test::Unit::TestCase
     get '/users/edit/user1'
     assert last_response.ok?
 
-    expected = [
-      "user:",
-      "  mail: String",
-      "  public_key: Text",
-      "  is_admin: Boolean",
-      "  is_restricted: Boolean",
-      "data:",
-      "  name: user1",
-      "  mail: user1@example.com",
-      "  public_key: abcdef",
-      "  is_admin: false",
-      "  is_restricted: true",
-      ""
-    ].join("\n")
+    expected = {
+      'user' => {
+        'mail'          => 'String',
+        'public_key'    => 'Text',
+        'is_admin'      => 'Boolean',
+        'is_restricted' => 'Boolean'
+      },
+      'data' => {
+        'name'          => 'user1',
+        'mail'          => 'user1@example.com',
+        'public_key'    => 'abcdef',
+        'is_admin'      => false,
+        'is_restricted' => true
+      }
+    }
 
-    assert_equal expected, last_response.body
+    assert_equal expected, y(last_response.body)
   end
 
   def test_updating_a_users_name_should_not_work

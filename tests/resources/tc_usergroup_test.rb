@@ -15,15 +15,16 @@ class TC_UsergroupgroupTest < Test::Unit::TestCase
     get '/usergroups'
     assert last_response.ok?
 
-    expected = [
-      "usergroup1:",
-      "  users:",
-      "usergroup2:",
-      "  users:",
-      ""
-    ].join("\n")
+    expected = {
+      'usergroup1' => {
+        'users' => nil
+      },
+      'usergroup2' => {
+        'users' => nil
+      }
+    }
 
-    assert_equal expected, last_response.body
+    assert_equal expected, y(last_response.body)
   end
 
   def test_creating_a_usergroup
@@ -60,13 +61,13 @@ class TC_UsergroupgroupTest < Test::Unit::TestCase
     get '/usergroups/usergroup1'
     assert last_response.ok?
 
-    expected = [
-      "usergroup1:",
-      "  users:",
-      ""
-    ].join("\n")
+    expected = {
+      'usergroup1' => {
+        'users' => nil
+      }
+    }
 
-    assert_equal expected, last_response.body
+    assert_equal expected, y(last_response.body)
   end
 
   def test_getting_an_unexisting_usergroup_should_not_work
@@ -79,13 +80,13 @@ class TC_UsergroupgroupTest < Test::Unit::TestCase
     get '/usergroups/new'
     assert last_response.ok?
 
-    expected = [
-      "usergroup:",
-      "  name: String",
-      ""
-    ].join("\n")
+    expected = {
+      'usergroup' => {
+        'name' => 'String'
+      }
+    }
 
-    assert_equal expected, last_response.body
+    assert_equal expected, y(last_response.body)
   end
 
   def test_getting_an_usergroup_edit_form
@@ -94,15 +95,16 @@ class TC_UsergroupgroupTest < Test::Unit::TestCase
     get '/usergroups/edit/usergroup1'
     assert last_response.ok?
 
-    expected = [
-      "usergroup:",
-      "  name: String",
-      "data:",
-      "  name: usergroup1",
-      ""
-    ].join("\n")
+    expected = {
+      'usergroup' => {
+        'name' => 'String'
+      },
+      'data' => {
+        'name' => 'usergroup1'
+      }
+    }
 
-    assert_equal expected, last_response.body
+    assert_equal expected, y(last_response.body)
   end
 
   def test_updating_a_usergroup_name_with_put

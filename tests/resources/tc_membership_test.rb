@@ -15,19 +15,22 @@ class TC_MembershipTest < Test::Unit::TestCase
     get '/memberships'
     assert last_response.ok?
 
-    expected = [
-      "#{@membership1.id}:",
-      "  attributes:",
-      "    user: user1",
-      "    usergroup: usergroup1",
-      "#{@membership2.id}:",
-      "  attributes:",
-      "    user: user2",
-      "    usergroup: usergroup2",
-      ""
-    ].join("\n")
+    expected = {
+      @membership1.id => {
+        'attributes' => {
+          'user'      => 'user1',
+          'usergroup' => 'usergroup1'
+        }
+      },
+      @membership2.id => {
+        'attributes' => {
+          'user'      => 'user2',
+          'usergroup' => 'usergroup2'
+        }
+      }
+    }
 
-    assert_equal expected, last_response.body
+    assert_equal expected, y(last_response.body)
   end
 
   def test_creating_a_membership
@@ -67,15 +70,15 @@ class TC_MembershipTest < Test::Unit::TestCase
     get "/memberships/#{@membership1.id}"
     assert last_response.ok?
 
-    expected = [
-      "#{@membership1.id}:",
-      "  attributes:",
-      "    user: user1",
-      "    usergroup: usergroup1",
-      ""
-    ].join("\n")
-
-    assert_equal expected, last_response.body
+    expected = {
+      @membership1.id => {
+        'attributes' => {
+          'user'      => 'user1',
+          'usergroup' => 'usergroup1'
+        }
+      }
+    }
+    assert_equal expected, y(last_response.body)
   end
 
   def test_getting_an_unexisting_membership_should_not_work
@@ -88,14 +91,14 @@ class TC_MembershipTest < Test::Unit::TestCase
     get '/memberships/new'
     assert last_response.ok?
 
-    expected = [
-      "membership:",
-      "  user: String",
-      "  usergroup: String",
-      ""
-    ].join("\n")
+    expected = {
+      'membership' => {
+        'user'      => 'String',
+        'usergroup' => 'String'
+      }
+    }
 
-    assert_equal expected, last_response.body
+    assert_equal expected, y(last_response.body)
   end
 
   def test_getting_a_membership_edit_form_should_not_work
