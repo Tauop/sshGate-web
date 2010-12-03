@@ -11,6 +11,11 @@ module AppTestCase
   def app
     Sinatra::Application
   end
+
+  def yaml_load(str)
+    YAML.load(str)
+  end
+  alias :y :yaml_load
 end
 
 require 'tests/tc_application_test'

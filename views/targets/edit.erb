@@ -1,0 +1,12 @@
+target:
+  name: String
+  private_key: Text
+  ssh_port: Integer
+  scp_port: Integer
+  ssh_enable_x11: Boolean
+data:
+  name: <%= @target.name %>
+  public_key: "<%= @target.public_key %>"
+  ssh_port: <%= @target.ssh_port %>
+  scp_port: <%= @target.scp_port %>
+  ssh_enable_x11: <%= @target.ssh_x11_enabled? ? 'true' : 'false' %>
