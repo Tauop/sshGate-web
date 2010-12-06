@@ -1,4 +1,6 @@
 class Target < ActiveRecord::Base
+  has_many :aliases, :dependent => :destroy
+
   validates_presence_of   :name, :on => :create, :message => 'name is required'
   validates_uniqueness_of :name, :message => 'name has already been taken'
 

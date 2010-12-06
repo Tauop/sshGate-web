@@ -7,15 +7,16 @@ module Sinatra
         :key      => :id,
         :model    => resource_name_s.capitalize,
         :singular => resource_name_s,
+        :plural   => "#{resource_name_s}s",
         :only     => [:index, :new, :show, :edit, :create, :update, :delete]
       }.merge(options)
 
       # Index
       if options[:only].include?(:index)
         class_eval <<-IndexMeth
-          get '/#{resource_name}s' do
-            @#{resource_name}s = #{options[:model]}.all
-            erb :"#{resource_name}s/index"
+          get '/#{options[:plural]}' do
+            @#{options[:plural]} = apply_scopes(:#{resource_name}, #{options[:model]}, params).all
+            erb :"#{options[:plural]}/index"
           end
         IndexMeth
       end
@@ -23,9 +24,9 @@ module Sinatra
       # New
       if options[:only].include?(:new)
         class_eval <<-NewMeth
-          get '/#{resource_name}s/new' do
+          get '/#{options[:plural]}/new' do
             @#{resource_name} = #{options[:model]}.new
-            erb :'#{resource_name}s/new'
+            erb :'#{options[:plural]}/new'
           end
         NewMeth
       end
@@ -33,12 +34,12 @@ module Sinatra
       # Show
       if options[:only].include?(:show)
         class_eval <<-ShowMeth
-          get '/#{resource_name}s/:#{options[:key]}' do
+          get '/#{options[:plural]}/:#{options[:key]}' do
             @#{resource_name} = #{options[:model]}.find_by_#{options[:key]}(params[:#{options[:key]}])
 
             throw :halt, [404, '#{options[:singular].capitalize} not found'] unless @#{resource_name}
 
-            erb :'#{resource_name}s/show'
+            erb :'#{options[:plural]}/show'
           end
         ShowMeth
       end
@@ -46,12 +47,12 @@ module Sinatra
       # Edit
       if options[:only].include?(:edit)
         class_eval <<-EditMeth
-          get '/#{resource_name}s/edit/:#{options[:key]}' do
+          get '/#{options[:plural]}/edit/:#{options[:key]}' do
             @#{resource_name} = #{options[:model]}.find_by_#{options[:key]}(params[:#{options[:key]}])
 
             throw :halt, [404, '#{options[:model].capitalize} not found'] unless @#{resource_name}
 
-            erb :'#{resource_name}s/edit'
+            erb :'#{options[:plural]}/edit'
           end
         EditMeth
       end
@@ -59,13 +60,13 @@ module Sinatra
       # Create
       if options[:only].include?(:create)
         class_eval <<-CreateMeth
-          post '/#{resource_name}s' do
+          post '/#{options[:plural]}' do
             @#{resource_name} = #{options[:model]}.new(params[:#{resource_name}])
             if @#{resource_name}.save
-              redirect "/#{resource_name}s/\#{@#{resource_name}.#{options[:key]}}", '#{options[:model]} created'
+              redirect "/#{options[:plural]}/\#{@#{resource_name}.#{options[:key]}}", '#{options[:model]} created'
             else
               message = show_errors(@#{resource_name}, 'Error while saving #{options[:singular]}')
-              redirect "/#{resource_name}s/new", message
+              redirect "/#{options[:plural]}/new", message
             end
           end
         CreateMeth
@@ -74,16 +75,16 @@ module Sinatra
       # Update
       if options[:only].include?(:update)
         class_eval <<-UpdateMeth
-          put '/#{resource_name}s/:#{options[:key]}' do
+          put '/#{options[:plural]}/:#{options[:key]}' do
             @#{resource_name} = #{options[:model]}.find_by_#{options[:key]}(params[:#{options[:key]}])
 
             throw :halt, [404, '#{options[:singular].capitalize} not found'] unless @#{resource_name}
 
             @#{resource_name}.update_attributes(params[:#{resource_name}])
             if @#{resource_name}.save
-              redirect "/#{resource_name}s/\#{@#{resource_name}.#{options[:key]}}", '#{options[:singular].capitalize} updated'
+              redirect "/#{options[:plural]}/\#{@#{resource_name}.#{options[:key]}}", '#{options[:singular].capitalize} updated'
             else
-              redirect "/#{resource_name}s/edit/\#{params[:#{options[:key]}]}", 'Error while updating #{options[:singular]}'
+              redirect "/#{options[:plural]}/edit/\#{params[:#{options[:key]}]}", 'Error while updating #{options[:singular]}'
             end
           end
         UpdateMeth
@@ -92,13 +93,13 @@ module Sinatra
       # Delete
       if options[:only].include?(:delete)
         class_eval <<-DeleteMeth
-          delete '/#{resource_name}s/:#{options[:key]}' do
+          delete '/#{options[:plural]}/:#{options[:key]}' do
             @#{resource_name} = #{options[:model]}.find_by_#{options[:key]}(params[:#{options[:key]}])
 
             throw :halt, [404, '#{options[:singular].capitalize} not found'] unless @#{resource_name}
 
             @#{resource_name}.destroy
-            redirect '/#{resource_name}s', '#{options[:singular].capitalize} removed'
+            redirect '/#{options[:plural]}', '#{options[:singular].capitalize} removed'
           end
         DeleteMeth
       end

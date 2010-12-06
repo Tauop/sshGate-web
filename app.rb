@@ -64,8 +64,14 @@ require 'model/membership'
 require 'model/user'
 require 'model/usergroup'
 require 'model/target'
+require 'model/alias'
 
 resources :membership, :only => [:index, :show, :new, :create, :delete]
 resources :user,      :key => :name
 resources :usergroup, :key => :name
 resources :target,    :key => :name
+resources :alias,     :key => :name,
+          :plural => 'aliases',
+          :only => [:index, :show, :new, :create, :delete]
+
+has_scope :alias, :target
