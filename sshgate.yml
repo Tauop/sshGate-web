@@ -1,4 +1,7 @@
 ---
+users_keys_dir: keys/users
+targets_keys_dir: keys/targets
+
 database:
   production:
     adapter: sqlite3

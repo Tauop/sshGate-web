@@ -1,0 +1,6 @@
+<%= @target.name %>:
+  attributes:
+    public_key: "<%= @target.public_key %>"
+    ssh_port: <%= @target.ssh_port %>
+    scp_port: <%= @target.scp_port %>
+    ssh_enable_x11: <%= @target.ssh_x11_enabled? ? 'true' : 'false' %>

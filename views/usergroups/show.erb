@@ -1,0 +1,5 @@
+<%= @usergroup.name %>:
+  users:
+    <%- @usergroup.users.each do |user| -%>
+    - <%= user.name %>
+    <%- end -%>
